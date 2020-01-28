@@ -18,7 +18,7 @@ public class MessageQueueTest {
 
         MessageQueue messageQueue = new MessageQueue();
         messageQueue.send(new String("hello"));
-        messageQueue.addMessageListener(String.class, (String s) -> receivedString = s);
+        messageQueue.addMessageListener(String.class, s -> receivedString = s);
         messageQueue.deliverMessages();
 
         assertEquals("hello", receivedString);
@@ -82,8 +82,8 @@ public class MessageQueueTest {
 
         MessageQueue messageQueue = new MessageQueue();
         messageQueue.send("message");
-        messageQueue.addMessageListener(Long.class, (Long s) -> receiveCount++);
-        messageQueue.addMessageListener(String.class, (String s) -> messageQueue.send(3L));
+        messageQueue.addMessageListener(Long.class, l -> receiveCount++);
+        messageQueue.addMessageListener(String.class, s -> messageQueue.send(3L));
         messageQueue.deliverMessages();
 
         assertEquals(1, receiveCount);

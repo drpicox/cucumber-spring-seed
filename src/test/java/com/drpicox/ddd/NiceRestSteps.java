@@ -12,7 +12,7 @@ public class NiceRestSteps {
     @Autowired
     MockMvc mockMvc;
 
-    @Given("you have a nice rest")
+    @Given("you have a pleasent rest")
     public void you_have_a_nice_rest() throws Exception {
         var result = mockMvc.perform(get("/api/v1/nice")).andReturn();
         var response = result.getResponse();

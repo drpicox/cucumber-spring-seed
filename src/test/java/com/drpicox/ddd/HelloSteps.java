@@ -19,4 +19,21 @@ public class HelloSteps {
         System.out.println("Hello!");
     }
 
+    @Given("^hello (\\w+)$")
+    public void hello_XXX(String name) {
+        System.out.println("Hello " + name);
+    }
+
+    private String myName;
+
+    @Given("I am (\\w+)")
+    public void i_am_XXX(String name) {
+        myName = name;
+    }
+
+    @Given("I say hello")
+    public void i_say_hello() {
+        System.out.println("I am " + myName + " and I say hello");
+    }
+
 }

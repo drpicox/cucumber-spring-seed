@@ -6,4 +6,11 @@ Feature: Nice
   Scenario: say hello
     Then the nice service is nice
     And say hello
-    And you have a nice rest
+    And you have a pleasent rest
+
+  Scenario: say hello peter
+    Then hello peter
+
+  Scenario: I say hello
+    Given I am David
+    Then I say hello
