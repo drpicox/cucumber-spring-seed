@@ -36,4 +36,9 @@ public class HelloSteps {
         System.out.println("I am " + myName + " and I say hello");
     }
 
+    @Given("My favourite number is (\\d+)")
+    public void my_favourite_number_is_XXX(int number) {
+        System.out.println("My favourite number is " + number);
+    }
+
 }

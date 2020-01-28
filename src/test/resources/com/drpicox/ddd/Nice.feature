@@ -14,3 +14,4 @@ Feature: Nice
   Scenario: I say hello
     Given I am David
     Then I say hello
+    And My favourite number is 10
