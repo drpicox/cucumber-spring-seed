@@ -10,38 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootApplication
 @Import({MessageQueue.class})
-public class Application implements ApplicationRunner {
+public class Application {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
-    private CounterRepository counterRepository;
-
-    public Application(CounterRepository counterRepository) {
-        this.counterRepository = counterRepository;
-    }
-
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-        // ~/test
-
-        // counterRepository.flush();
-        help();
-        System.out.println("ala3");
-        // System.exit(0);
-    }
-
-    @Transactional
-    public void help() {
-        var n = new Counter();
-        counterRepository.save(n);
-        // counterRepository.flush();
-
-        counterRepository.findAll().forEach(c -> {
-            c.increment();
-            c.dump();
-            // counterRepository.save(c);
-        });
-    }
 }

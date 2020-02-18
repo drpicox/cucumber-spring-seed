@@ -6,9 +6,7 @@ import com.drpicox.queue.MessageQueue;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/tiquets")
@@ -21,21 +19,34 @@ public class TiquetsRestCtrl {
         messageQueue.addMessageListener(ProducteRegistratEvent.class, this::onProducteRegistrat);
     }
 
-    private Map<String, Tiquet> tiquets = new HashMap<>();
+    private List<TiquetEvent> events = new ArrayList<>();
 
     @PostMapping
     public String addTiquet(@Param("caixaNumero") int caixaNumero) {
-        String tiquetId = UUID.randomUUID().toString();
-        tiquets.put(tiquetId, new Tiquet(tiquetId, caixaNumero));
-        return tiquetId;
+        var tiquets = getTiquets();
+        var event = tiquets.createTiquet(caixaNumero);
+        saveAndSend(event);
+        return event.getTiquetId();
     }
 
     @GetMapping("/{tiquetId}/valor")
     public int getValor(@PathVariable("tiquetId") String tiquetId) {
-        return tiquets.get(tiquetId).getValor();
+        var tiquets = getTiquets();
+        return tiquets.getValor(tiquetId);
     }
 
     private void onProducteRegistrat(ProducteRegistratEvent event) {
-        tiquets.values().forEach(tiquet -> tiquet.onProducteRegistrat(event));
+        var tiquets = getTiquets();
+        var consequenceEvent = tiquets.onProducteRegistrat(event);
+        saveAndSend(consequenceEvent);
+    }
+
+    private void saveAndSend(TiquetEvent event) {
+        events.add(event);
+        messageQueue.send(event);
+    }
+
+    private TiquetsDictionary getTiquets() {
+        return new TiquetsDictionary(events);
     }
 }

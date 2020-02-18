@@ -2,13 +2,12 @@ package com.drpicox.ddd.caixesRegistradores;
 
 import java.io.Serializable;
 
-public class ProducteRegistratEvent implements Serializable {
-    private int caixaNumero;
+public class ProducteRegistratEvent extends CaixaRegistradoraEvent {
     private String nom;
     private int preu;
 
     public ProducteRegistratEvent(int caixaNumero, String nom, int preu) {
-        this.caixaNumero = caixaNumero;
+        super(caixaNumero);
         this.nom = nom;
         this.preu = preu;
     }

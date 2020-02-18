@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/caixesRegistradores")
@@ -23,17 +23,29 @@ public class CaixaRegistradoraRestCtrl {
         this.producteRestCtrl = producteRestCtrl;
     }
 
-    private Map<Integer, CaixaRegistradora> caixes = new HashMap<>();
+    private List<CaixaRegistradoraEvent> events = new ArrayList<>();
 
     @PostMapping
     public void addCaixaRegistradora(@Param("caixaNumero") int caixaNumero, @Param("calaix") int calaix) {
-        caixes.put(caixaNumero, new CaixaRegistradora(caixaNumero, calaix));
+        var caixes = getCaixes();
+        var event = caixes.addCaixaRegistradora(caixaNumero, calaix);
+        saveAndSend(event);
     }
 
     @PostMapping("/{caixaNumero}/registre")
     public void registraProducte(@PathVariable("caixaNumero") int caixaNumero, @Param("nom") String nom) {
+        var caixes = getCaixes();
         var producte = producteRestCtrl.get(nom);
-        var event = caixes.get(caixaNumero).registra(producte);
+        var event = caixes.registraProducte(caixaNumero, producte);
+        saveAndSend(event);
+    }
+
+    private void saveAndSend(CaixaRegistradoraEvent event) {
+        events.add(event);
         messageQueue.send(event);
+    }
+
+    private CaixaRegistradoraDiccionari getCaixes() {
+        return new CaixaRegistradoraDiccionari(events);
     }
 }
